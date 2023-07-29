@@ -15,7 +15,6 @@ const mongoose = require('mongoose')
 
 //Defining faq schema
 const faqSchema = new mongoose.Schema({
-    id:Number ,
     ques:String,
     ans:String
 })
@@ -23,7 +22,7 @@ const faqSchema = new mongoose.Schema({
 //faqModel
 const Faq =  mongoose.model('Faq',faqSchema)
 //Connect to the database using Connection String
-mongoose.connect('mongodb+srv://kaursp2003:ASDFGHJKL@cluster0.ehzjigu.mongodb.net/',{useNewUrlParser:true, useUnifiedTopology : true}).then(()=>{
+mongoose.connect('mongodb+srv://simran:ASDFGHJKL@cluster0.hjjk00d.mongodb.net/test',{useNewUrlParser:true, useUnifiedTopology : true}).then(()=>{
     console.log("Connected to MongoDB")
 }).catch((error)=>{
     console.log("Error connecting to the database")
@@ -38,33 +37,48 @@ app.get('/',async(req,res)=>{
 })
 
 //Read one 
-app.get('/:id',(req,res)=>{
-    // var id = req.params.id
-    //  var data = data.finOne(id)
-    //  res.json(data)
-    res.send("Read One")
+app.get('/:id',async (req,res)=>{
+    var id = req.params.id
+    var data = await Faq.findOne({_id:id})
+    res.json(data)
+    
 })
 
 //createOne
 app.post('/',async (req,res)=>{
     
     const {ques,ans} = req.body
-    var id = Math.floor(Math.random()*1000)
-    const newFaq = new Faq({id,ques,ans})
+    
+    const newFaq = new Faq({ques,ans})
     await newFaq.save()
     res.send("Posted")
 })
 
 //updateOne
-app.put('/:id',(req,res)=>{
 
-    res.send("Updated ")
-})
+app.put('/:id', async (req, res) => {
+    
+      var data = await Faq.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  
+      if (data) {
+        res.send("Updated");
+      } else {
+        res.status(404).send("Error updating the FAQ");
+      }
+
+  });
 
 //deleteOne
-app.delete('/:id',(req,res)=>{
+app.delete('/:id',async (req,res)=>{
+    var id = req.params.id
+    var data = await Faq.findByIdAndDelete(req.params.id).exec()
 
-    res.send("Deleted")
+    if(data){
+        res.send("Deleted")
+    }
+    else{
+        res.status(404).send("Error deleting the FAQ"); 
+    }
 })
 
 
