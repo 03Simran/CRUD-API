@@ -31,13 +31,13 @@ mongoose.connect('mongodb+srv://simran:ASDFGHJKL@cluster0.hjjk00d.mongodb.net/te
 
 
 //Read all data 
-app.get('/',async(req,res)=>{
+app.get('/faqs',async(req,res)=>{
     const ques = await Faq.find({})
     res.json(ques)
 })
 
 //Read one 
-app.get('/:id',async (req,res)=>{
+app.get('/faqs/:id',async (req,res)=>{
     var id = req.params.id
     var data = await Faq.findOne({_id:id})
     res.json(data)
@@ -45,7 +45,7 @@ app.get('/:id',async (req,res)=>{
 })
 
 //createOne
-app.post('/',async (req,res)=>{
+app.post('/faqs',async (req,res)=>{
     
     const {ques,ans} = req.body
     
@@ -56,7 +56,7 @@ app.post('/',async (req,res)=>{
 
 //updateOne
 
-app.put('/:id', async (req, res) => {
+app.put('/faqs/:id', async (req, res) => {
     
       var data = await Faq.findByIdAndUpdate(req.params.id, req.body, { new: true });
   
@@ -69,7 +69,7 @@ app.put('/:id', async (req, res) => {
   });
 
 //deleteOne
-app.delete('/:id',async (req,res)=>{
+app.delete('/faqs/:id',async (req,res)=>{
     var id = req.params.id
     var data = await Faq.findByIdAndDelete(req.params.id).exec()
 
